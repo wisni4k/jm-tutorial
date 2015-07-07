@@ -4,6 +4,10 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.UUID;
 
+import lombok.Getter;
+import lombok.Setter;
+@Getter
+@Setter
 public class DeviceDto implements Serializable {
 	private static final long serialVersionUID = -8984798902681813138L;
 
@@ -19,6 +23,7 @@ public class DeviceDto implements Serializable {
 	private String ownerId;
 	private Map<String, String> properties;
 
+	
 	public DeviceDto(String id, String externalId, String type, UUID uuid, String thingId, String name,
 			String description, String status, String registrationKey, String ownerId, Map<String, String> properties) {
 		this.id = id;
@@ -31,94 +36,6 @@ public class DeviceDto implements Serializable {
 		this.status = status;
 		this.registrationKey = registrationKey;
 		this.ownerId = ownerId;
-		this.properties = properties;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getExternalId() {
-		return externalId;
-	}
-
-	public void setExternalId(String externalId) {
-		this.externalId = externalId;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public UUID getUuid() {
-		return uuid;
-	}
-
-	public void setUuid(UUID uuid) {
-		this.uuid = uuid;
-	}
-
-	public String getThingId() {
-		return thingId;
-	}
-
-	public void setThingId(String thingId) {
-		this.thingId = thingId;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	public String getRegistrationKey() {
-		return registrationKey;
-	}
-
-	public void setRegistrationKey(String registrationKey) {
-		this.registrationKey = registrationKey;
-	}
-
-	public String getOwnerId() {
-		return ownerId;
-	}
-
-	public void setOwnerId(String ownerId) {
-		this.ownerId = ownerId;
-	}
-
-	public Map<String, String> getProperties() {
-		return properties;
-	}
-
-	public void setProperties(Map<String, String> properties) {
 		this.properties = properties;
 	}
 

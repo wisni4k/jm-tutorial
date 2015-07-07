@@ -12,7 +12,6 @@ public class SlideshowService {
 
 	private ResourceHolderRepository resourceHolderRepository;
 	private ResourceHolderResourceRepository resourceHolderResourceRepository;
-	private ResourceHolderScheduleRepository rsrcHldrSchdleRpstry;
 	private scheduleRepository ScheduleServiceImplSimple;
 
 	public SlideshowData generateTimelineData(String resourceHolderId) throws Exception {
@@ -35,7 +34,6 @@ public class SlideshowService {
 		if (defaultAsset != null) {
 			slideshow.setHeadline("Slideshow");
 			slideshow.setText("This is your default Slideshow content");
-			slideshow.setType("default");
 			slideshow.setAsset(defaultAsset);
 		} else {
 			slideshow.setHeadline("Slideshow");
@@ -43,23 +41,18 @@ public class SlideshowService {
 			slideshow.setType("default");
 		}
 
-		ResourceSchedule schedule = ScheduleServiceImplSimple.findOne(resource.getScheduleId());
+		
+		ResourceSchedule resourceSchedule = fetchResourceSchedule(resource);
+		ValidateResourceSchedule(resourceSchedule);
 
-		if (schedule == null) {
-			try {
-				throw new Exception("");
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		if (schedule.getResourceSchedules().size() == 0) {
+		
+		
+		if (resourceSchedule.getResourceSchedules().size() == 0) {
 			throw new Exception("", null);
 		}
 
 		Set<String> resourceIds = new HashSet<>();
-		for (ResourceSchedule item : schedule.getResourceSchedules()) {
+		for (ResourceSchedule item : resourceSchedule.getResourceSchedules()) {
 			resourceIds.add(item.getResourceId());
 		}
 
@@ -71,36 +64,51 @@ public class SlideshowService {
 
 		Calendar calendar = GregorianCalendar.getInstance();
 
-		for (int i = 0; i < schedule.getResourceSchedules().size() - 1; ++i) {
-			if (calendar.getTimeInMillis() > schedule.getResourceSchedules().get(i).getStartTime()) {
+		for (int i = 0; i < resourceSchedule.getResourceSchedules().size() - 1; ++i) {
+			if (calendar.getTimeInMillis() > resourceSchedule.getResourceSchedules().get(i).getStartTime()) {
 				++slide;
 			}
-			timelineIntervalList.add(resourceScheduleToDate(schedule.getResourceSchedules().get(i),
-					assets.get(schedule.getResourceSchedules().get(i).getResourceId())));
+			timelineIntervalList.add(resourceScheduleToDate(resourceSchedule.getResourceSchedules().get(i),
+					assets.get(resourceSchedule.getResourceSchedules().get(i).getResourceId())));
 			if (defaultAsset != null) {
-				if (schedule.getResourceSchedules().get(i).getEndTime() != schedule.getResourceSchedules().get(i + 1)
+				if (resourceSchedule.getResourceSchedules().get(i).getEndTime() != resourceSchedule.getResourceSchedules().get(i + 1)
 						.getStartTime()) {
-					if (schedule.getResourceSchedules().get(i).getEndTime() < calendar.getTimeInMillis()) {
+					if (resourceSchedule.getResourceSchedules().get(i).getEndTime() < calendar.getTimeInMillis()) {
 						++slide;
 					}
-					timelineIntervalList.add(defaultDate(schedule.getResourceSchedules().get(i).getEndTime(),
-							schedule.getResourceSchedules().get(i + 1).getStartTime(), defaultAsset));
+					timelineIntervalList.add(defaultDate(resourceSchedule.getResourceSchedules().get(i).getEndTime(),
+							resourceSchedule.getResourceSchedules().get(i + 1).getStartTime(), defaultAsset));
 				}
 			}
 		}
-		if (schedule.getResourceSchedules().size() > 0) {
-			if (calendar.getTimeInMillis() > schedule.getResourceSchedules()
-					.get(schedule.getResourceSchedules().size() - 1).getEndTime()) {
+		if (resourceSchedule.getResourceSchedules().size() > 0) {
+			if (calendar.getTimeInMillis() > resourceSchedule.getResourceSchedules()
+					.get(resourceSchedule.getResourceSchedules().size() - 1).getEndTime()) {
 				slide = 0;
 			}
 
 			timelineIntervalList.add(resourceScheduleToDate(
-					schedule.getResourceSchedules().get(schedule.getResourceSchedules().size() - 1), assets.get(schedule
-							.getResourceSchedules().get(schedule.getResourceSchedules().size() - 1).getResourceId())));
+					resourceSchedule.getResourceSchedules().get(resourceSchedule.getResourceSchedules().size() - 1), assets.get(resourceSchedule
+							.getResourceSchedules().get(resourceSchedule.getResourceSchedules().size() - 1).getResourceId())));
 		}
 
 		slideshow.setDate(timelineIntervalList);
 		return new SlideshowData(slideshow, slide);
+	}
+
+	private void ValidateResourceSchedule(ResourceSchedule resourceSchedule) {
+		if (resourceSchedule == null) {
+			try {
+				throw new Exception("");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private ResourceSchedule fetchResourceSchedule(Resource resource) {
+		return ScheduleServiceImplSimple.findOne(resource.getScheduleId());
 	}
 
 	private void validateResourceHolder(ResourceHolder resourceHolder) throws Exception {

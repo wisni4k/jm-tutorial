@@ -1,22 +1,27 @@
 package com.acme.craft.fixme.commons.collection;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+
+import org.apache.commons.collections4.CollectionUtils;
+
+import com.google.common.collect.Lists;
 
 public class PropertyService {
 
+	
+	//inicjalizacja inline
 	public List<String> defaultProperties() {
-		List<String> properties = new ArrayList<>();
-		properties.add("property1");
-		properties.add("property2");
-		properties.add("property3");
-		properties.add("property4");
-
+		List<String> properties = Arrays.asList("a","b");
+		properties = Lists.newArrayList("e","c");
 		return properties;
 	}
 
+	//fix null check
 	public boolean valid(List<String> properties) {
-		if (properties != null && properties.size() > 0) {
+		if (CollectionUtils.isEmpty(properties)) {
 			boolean isValid = true;
 			for (String property : properties) {
 				isValid = isValid && valid(property);
