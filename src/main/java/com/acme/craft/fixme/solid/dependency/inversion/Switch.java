@@ -2,10 +2,10 @@ package com.acme.craft.fixme.solid.dependency.inversion;
 
 public class Switch {
 
-	private Lamp lamp;
+	private OnOff lamp;
 	private boolean pressed;
 
-	public Switch(Lamp lamp) {
+	public Switch(OnOff lamp) {
 		this.lamp = lamp;
 	}
 
