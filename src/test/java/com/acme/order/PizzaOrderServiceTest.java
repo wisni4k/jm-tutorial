@@ -1,7 +1,10 @@
 package com.acme.order;
 
+<<<<<<< HEAD
 import java.util.Date;
 
+=======
+>>>>>>> upstream/master
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +18,11 @@ public class PizzaOrderServiceTest {
 	private OrderDatabase orderDatabase;
 	private OrderFactory orderFactory;
 	private DeliveryTimeService deliveryTimeService;
+<<<<<<< HEAD
 	private MessageTemplateService messageTemplateService;
+=======
+	private MessageTemplateService messageTemplate;
+>>>>>>> upstream/master
 
 	@Before
 	public void init() {
@@ -23,6 +30,7 @@ public class PizzaOrderServiceTest {
 		orderDatabase = Mockito.mock(OrderDatabase.class);
 		orderFactory = Mockito.mock(OrderFactory.class);
 		deliveryTimeService = Mockito.mock(DeliveryTimeService.class);
+<<<<<<< HEAD
 		messageTemplateService = Mockito.mock(MessageTemplateService.class);
 		pizzaOrderService = new PizzaOrderService(mailSender, orderDatabase, orderFactory, deliveryTimeService,
 				messageTemplateService);
@@ -43,17 +51,35 @@ public class PizzaOrderServiceTest {
 	
 	@Test
 	public void cancelledOrderShouldBePersistedAndEmailShouldBeSent() {
+=======
+		messageTemplate = Mockito.mock(MessageTemplateService.class);
+		pizzaOrderService = new PizzaOrderService(mailSender, orderDatabase,
+				orderFactory, deliveryTimeService, messageTemplate);
+	}
+
+	@Test
+	public void cancelledOrderShouldBePersistedAndEmailShoudlBeSent() {
+>>>>>>> upstream/master
 		// given
 		String pizzaOrderId = "fake_id";
 		PizzaOrder givenPizzaOrder = givenPizzaOrder();
 		// stub
+<<<<<<< HEAD
 		OrderCanceledTemplate template = Mockito.mock(OrderCanceledTemplate.class);
 		Mockito.when(orderDatabase.get(Mockito.anyString())).thenReturn(givenPizzaOrder);
 		Mockito.when(messageTemplateService.getCancelTemplate()).thenReturn(template);
+=======
+		OrderCanceledTemplate template = Mockito
+				.mock(OrderCanceledTemplate.class);
+		Mockito.when(orderDatabase.get(Mockito.anyString())).thenReturn(
+				givenPizzaOrder);
+		Mockito.when(messageTemplate.getCancelTemplate()).thenReturn(template);
+>>>>>>> upstream/master
 		// when
 		pizzaOrderService.cancelOrder(pizzaOrderId);
 		// then
 		Assert.assertTrue(givenPizzaOrder.isCancelled());
+<<<<<<< HEAD
 		ArgumentCaptor<String> sentEmail = ArgumentCaptor.forClass(String.class);
 
 		Mockito.verify(mailSender).send(Mockito.any(Template.class), sentEmail.capture());
@@ -66,6 +92,23 @@ public class PizzaOrderServiceTest {
 		return new Date();
 	}
 	
+=======
+		ArgumentCaptor<String> sentEmailAddress = ArgumentCaptor
+				.forClass(String.class);
+		Mockito.verify(mailSender).send(Mockito.any(Template.class),
+				sentEmailAddress.capture());
+		Assert.assertTrue(sentEmailAddress.getValue().equals(
+				givenPizzaOrder.getEmail()));
+
+		ArgumentCaptor<PizzaOrder> savedPizzaOrder = ArgumentCaptor
+				.forClass(PizzaOrder.class);
+		Mockito.verify(orderDatabase).save(savedPizzaOrder.capture());
+		
+		Assert.assertTrue(savedPizzaOrder.getValue().equals(givenPizzaOrder));
+
+	}
+
+>>>>>>> upstream/master
 	private PizzaOrder givenPizzaOrder() {
 		Customer customer = givenCustomer();
 		PizzaType type = Mockito.mock(PizzaType.class);
@@ -74,9 +117,16 @@ public class PizzaOrderServiceTest {
 	}
 
 	private Customer givenCustomer() {
+<<<<<<< HEAD
 		String pizzaEmail = "fake_email";
 		Customer customer = new Customer();
 		return customer;
 	}
 
+=======
+		// String customerEmail = "fake_email";
+		Customer customer = new Customer();
+		return customer;
+	}
+>>>>>>> upstream/master
 }
